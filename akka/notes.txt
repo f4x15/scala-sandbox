@@ -1,0 +1,139 @@
+#Akka
+
+## Actors pros and cons: 
+- Actor is acync.
+- Actor have strong isolation principle: you can communicate with actos only throw messages that a actor handles. This prevents sharing any state between actors.
+- Location transparency: actors can be clear managed and restarted if need.
+- Lightweight: 
+
+## Actors in more detail:
+Each actor defines a type T for the messages it can receive. Case classes and case objects is excellent messages since they are immutable and support pattern matching.
+
+## Advices to create messages
+- Need domain-specific names
+- Messages should be immutable since they shared betweed different threads
+- good place put message in associated actor
+- good place actors iniciitial behaviour in objects apply method
+
+The accepted message types of an Actor together with all reply types defines the protocol spoken by this Actor. The protocol is bundled together with the behavior that implements it in a nicely wrapped scope—the Greeter object.
+
+## Location transparity of actors LTA
+We can't create Actors use `new method. Spawn don't return an actor instance but return a refernce, typed.ActorRef. 
+
+In method. Spawn don't return an actor instance but return a refernce, typed.ActorRef. 
+In Akka location doesn't matter. It is location transparency throw ActorRef nor Actor instance. If needed, the runtime can optimize the system by changing an Actor’s location or the entire application topology while it is running. 
+
+## Actor system
+An ActorSystem is the intial entry point into Akka, usually only one is created per application. An ActorSystem has a name and a guardian actor.
+
+Others actors are created using `spawn` methods on ActorContext.
+Actor system uses 'Behaviors.setup` to bootstrap the application.
+
+## Asynchronous communication
+Actors communicate using asynchronous messages. This ensures that the sender does not stick around waiting for their message to be processed by the recipient
+
+An Actor doesn't do anything until it recive a message. The Actors' mailbox is queue with orderingsemantics. 
+
+When Actor isn't processeng messages it is in a suspend state and not utilisate any resourses. 
+
+The guardian is the top level actor that bootstraps your application. THe guardian is typically defined with Behaviors.setup that contains a initial bootstrap.
+
+## Working with Actors
+FOr create non-top-level actorwe use `context.actorOf()`.
+
+## Message delivery mechanism
+There are three delivery mechanism:
+- `at-most-once`: message may be delivery 0 or 1 time. Message may be lost and never dublicated. 
+- `at-least-once` delivery: message may be delivery 1..infinity times. Multiple times and at-least one succees. Messages may be dublicated but can't lost. 
+- `exactly-ones` delivery: the message handled exactly ones delivery made to the recipient; the message neither be lost or duplicated. 1-1
+
+From `at-most-once` to `exactly-ones` increase implementation overhead: 1. send and forget; 2. send and ASK by the recepient; 3. need 2 + filter duplicates on the end.
+
+## Guarantee of delivery
+THis problem doesn't in domain-specific guarantee. 
+
+Messages can't be ordering delivery. 
+
+## Akka Classic VS Akka Typed
+[based on](https://stackoverflow.com/questions/61148696/akka-classic-vs-akka-typed/61149663#61149663)
+
+Akka Typed it is new type of Actor interface. SHould use it as more typed and safety. 
+
+For create Classic Actor we use:
+- extend from Actor interface
+- receive: pattern-matching template
+
+For Typed Actors we use:
+- Behaviour factory construct Actors.
+- Behaviour it is typed: `Behavior[T]`. It is typed-Actor-wrapper 
+
+shortly: for new project should use Classic Actors, For GreenFIeld projects use Types Actors.
+
+## Akka guarantee delivery
+We have seen that Akka does not guarantee delivery of these messages and leaves it to the application to provide success notifications.
+
+
+***
+# Defference between Typed and Classic Actors
+[based in](https://doc.akka.io/docs/akka/current/typed/from-classic.html)
+
+## Behavior VS Classic Actor
+In typed the Bahaviour defines how to handle incoming messages. After processing messages, a different Behaviour mey be returned for porcessing next messages. This means that an actor started win some one initial `Behaviour` and may change Behaviour over its lifecycle. 
+
+Behaviour has type parameter describe what type it can handle. 
+
+## Classic `actorOf and Props`
+A classic actor is started with the `actorOf` method of the ActorContext or ActorSystem.
+VS
+Corresponding method in Typed is called `spawn` in the akka.actor.typed.scaladsl.ActorContext.
+
+In typed, the `spawn` method creates an actor directly from a given `Behavior` without using a `Props` factory.
+
+For object-oriented style need `Behaviour.setup` factory. For the function style there is typically no need for the factory.
+
+## ActorRef 
+In typed Akka there is `ActorRef[T]` reference.
+
+## Sepervision
+In Classic Akka: actor `restarted` when a fail
+In Typed Akka: actor `stoped` when a fail if sepervisior stratege not defined. 
+
+In classic actor overriding the `supervisorStrategy` method in the parent actor.
+In Typed the supervisor strategy is defined by wrapping the `Behavior` of the child actor with `Behaviors.supervise`. 
+
+## Lifecycle hooks
+Typed actors have some signals: PostStop, PreRestart, Terminated
+
+Typed actors have support hooks throw 'PreRestarrt
+
+## Stopping
+Classic actors can be stopped with the stop method of ActorContext or ActorSystem. In Typed an actor is stopping itself by returning Behaviors.stopped. There is also a stop method in the ActorContext but it can only be used for stopping direct child actors and not any arbitrary actor.
+
+***
+
+# Typed Actors
+
+You can create actor by call ActorContext.spawn()
+
+***
+
+# Design actor-hierarchy
+THe are common evristic about design actor-hierarchy system:
+- In general prefer more granularity actors. Less actor be simple
+- Add more granularity when:
+	- need Higher concurrency
+	- complex conversations between actors that have many states.
+	- exits sense split actors for many simple items
+	- multiple unrelated responsibilities. Actors need be simple and with little impact with others - for isolation failures.
+
+As actors have changable nature we need some one templates for work win failed or stoppped actors. It is defined by policy of task.
+
+There are two policy for it:
+- All actors in the snapshot have either responded or have confirmed being stopped.
+- We reach a pre-defined deadline.
+
+## Design actor
+WHe started designing the actor we need design the lifecycle of our actor.
+THen we think about what information need for actor.
+
+For creade some-time duration scenarious we use `Behaviors.withTimers` and `startSingleTimer`. 

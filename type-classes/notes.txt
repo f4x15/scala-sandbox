@@ -1,0 +1,10 @@
+# Type classes
+In FP if we need add/update some behaviour we create type-classes.
+
+## Component of TC
+TC contains three component:
+- The type classes defined as trait that take at list one "generic" parameter.
+- Instance of the type class for types you want to extend
+- Interface methods that expose new API to users
+
+  

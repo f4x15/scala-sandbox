@@ -1,0 +1,74 @@
+# Scala concurrency
+
+## Thread
+
+Itraits RUnnable VS Callable:
+RUnable simple run, callable running and returning some one value V-type
+
+***
+## Feature VS Thread
+
+Thread is simple thread in JVM system. Future is **result of async computation** in future, that return some type.
+
+[Alvin: differences Thread and Features](https://alvinalexander.com/scala/differences-java-thread-vs-scala-future#summary-thread-vs-future)
+
+***
+Thread API:
+Constructors:
+    Thread()
+    Thread(Runnable target)
+Methods:
+    interrupt
+    join
+    run
+    start
+    yield
+
+Thread is thread without return value.
+
+***
+## WHat is Future 
+Fuature (F) is *value* (after some computation)  that become avalible in the *future*. F represent result of an asynchronous computation.
+- F has container semantics
+- F have error handling
+- *Promise* is low level API for convert callbacks to Future[T}
+
+In JAVA (and Java only) future is simple wrapper around callbacks. But in Scala F have some aditional features: error handling, container semantics, etc.
+
+Future is immitable. 
+
+(Future official doc)[https://docs.scala-lang.org/overviews/core/futures.html] 
+
+FUture.apply isn't blocking method
+
+***
+## Feature API
+F has some fields/methods:
+- value Option[Try[T]]
+Try[T] may refurn exception or success computation
+Option[T] may return: scala.Some or None. isEmpty: Bool field for test it.
+
+There are two ways for ruturn values/compupations from F:
+I Callback methods
+- onComplete method  
+    f.onComplete
+    case Success(val) => ...
+    case Failure(e) => ...
+or
+- onSuccess/onFailure callback methods
+    f onSuccess {...}
+    f onFailure {...}
+
+II Promise
+Futures can be created throw Promise (P)
+
+
+summary F metods:
+    isCompleted
+    onComplete
+    ready
+    result
+    value
+
+note: Callback is executed eventually (in russion: "в конечном счете")
+***

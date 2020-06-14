@@ -1,0 +1,26 @@
+Akka-http can implement full client and server with full functional.
+Http-stack placed on `akka-actor` and `akka-stream`.
+
+Actors do shine however when you need to keep some form of state and allow various requests to access something in (or through) an Actor. The other stellar feature of actors, that futures would not handle, is scaling-out onto a cluster very easily, by using Cluster Sharding or other location-transparent techniques.
+
+Cons of `Future` that they not support sclaling-out onto claster.
+When you need to keep some form of state and allow various requests to access something in (or through) an Actor. The other stellar feature of actors, that futures would not handle, is scaling-out onto a cluster very easily, by using Cluster Sharding or other location-transparent techniques. 
+
+The main class, QuickstartServer, is runnable because it has a main method, as shown in the following snippet. This class is intended to “bring it all together”, it is the main class that will start the ActorSystem with the root behavior which bootstraps all actors and other dependencies (database connections etc)
+
+## Akka HTTP isn't framework
+Conceptuality frameworks more fit for create browser-oriented web-applications, where need view templating, CSS, Ajax etc.
+
+Akka HTTP is a library this implemented client-server HTTP stack. It flexibility tools. It use case is used for REST/HTTP interface w/o some browser iteraction.
+
+Akka HTTP is made for building integration layers based on HTTP and as such tries to “stay on the sidelines”.
+
+Therefore you normally don’t build your application “on top of” Akka HTTP, but you build your application on top of whatever makes sense and use Akka HTTP merely for the HTTP integration needs.
+   
+Aim Akka HTTP may be siple: "Akka HTTP used for integration HTTP layers.
+
+If you need build application with guidlines of framework you should get `Play Framework` or `Lagom`.
+
+## 
+
+.

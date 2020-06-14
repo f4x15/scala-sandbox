@@ -1,0 +1,48 @@
+# Akka-stream
+## Motivation
+The data today is so big that we can't handle it as whole. We spend computaions under data as stream for large clusters as named is "big-data".
+
+Actors can be handle error-prone data and stream-sized data.
+
+## Relationship between `Akka Streams` and `Reactive Streams`
+THey have various scopes: While Akka Streams focus on `the formulation of transformations on data streams` the scope of Reactive Streams is to `define a common mechanism of how to move data across an asynchronous boundary without losses, buffering or resource exhaustion`.
+
+Shortly:
+Akka Stream (AS): used for transformation on a data streams.
+Reactive Streams (RS): used for move data an asynchronous boundary.
+
+AS uses for end-users VS RS uses for internal intercommunications in system.
+
+## Basic and core concepts of AS
+Akka Streams is a library to process and transfer a sequence of elements using bounded buffer space. 
+AKks can prosess a chain of processiong entities (or as we see later `graphs`). Each of this entities executes independently and bubbering ONLY LIMETED number of elements. This property of bounded buffers is one of the differences from the actor model. Akka Stream processing entities have bounded “mailboxes” that do not drop.
+
+## Akka Stream dictionary
+- `Stream` - An active process that involves moving and transforming data
+= `Element` - An element is  unit of streams. All operations transform and transfer elements from `upstream` to `downstream`. Buffer sizes are always expressed as `number of elements` independently from the actual size of the elements.
+- `Back-pressure` - a means of flow-control, that consumers of data to notify of producer about their current avalibility, effectivity and speed of consumption. 
+- `Graph` - current stream-processing topology.
+= `Operator` - the common name for all building block that build a Graph.
+
+## backpressure essence
+This way they can slow down a fast producer without blocking its thread. This is a thread-pool friendly design, since entities that need to wait (a fast producer waiting on a slow consumer) will not block the thread but can hand it back for further use to an underlying thread-pool.
+
+## Akka stream graph abstraction
+There are three types of abstractions:
+- `Source` - an operator `with exactly one output`, emitting data elements whenever downstream operators are ready to receive them.
+- `Sink`- an operator `with exactly one input', requesting and accepting data elements, possibility slowing down the upstream producer.
+- `Flow` - an operator with `exactly one input and output` which connects upstream and downstream by transforming the data elements flowing through it.
+- `RunnableGraph` - a Flow that both connected to Source and Sink respectively, and is ready to be `run()`
+
+It is possibility attach Flows into Source and Sink for coposite. 
+
+It is important to remember that even after constructing the RunnableGraph by connecting all the source, sink and different operators, no data will flow through it until it is materialized. Materialization is the process of allocating all resources needed to run the computation described by a Graph (in Akka Streams this will often involve starting up Actors).
+
+
+## AS workflow
+Streams always start flowing from a `Source[Out,M1]` then can continue through `Flow[In,Out,M2]` elements or more advanced operators to finally be consumed by a `Sink[In,M3]`.
+
+
+
+
+ 

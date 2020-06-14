@@ -1,0 +1,7 @@
+# Akka patterns
+There are some akka patterns
+[sourse](https://doc.akka.io/docs/akka/current/typed/interaction-patterns.html)
+
+## Ask-pattern
+If we need 1:1 iteraction between request and response we can use ask-pattern. For it we use `ask` from `ActorCOntext`. 
+

@@ -1,0 +1,11 @@
+# Akka-testing
+
+There are two types of testing:
+- sync 
+- async
+
+Also test may be:
+- `ActorTestKit` for ordinal test
+- `BehaviorTestKit` for behaviour tests
+
+

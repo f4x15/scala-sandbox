@@ -1,0 +1,21 @@
+# Futures and concurrency computations
+
+Future is a acync transform for imtutable states.
+Many operations with Future require Execution-context which imply some-strategy for async calculate functions.
+
+Поток, выполняющий  вычисление, определяется  подразумеваемо предоставляемые контекстом выполнения.
+Это позволяет давать описание асинхронных вычислений в виде серий преобразований неизменяемых значений, не ощущая при этом потребности в совместном использовании памяти и в блокировках.
+
+Fufures is excetution in other thread. All thread executed in Exection context. 
+
+Выполнять опрос позволяют два метода класса Future —
+isCompleted и value. Вызов в отношении еще не завершившегося
+фьючерса метода isCompleted приведет к возвращению значения
+false, а методом value при таких обстоятельствах будет
+возвращено значение None:
+
+see: Option[string] may be
+- Some[String]
+- None
+
+

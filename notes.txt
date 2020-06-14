@@ -1,0 +1,46 @@
+## Apply-method
+[Good links about `apply`-method](http://otfried.org/scala/apply.html)
+When `a` is object and you write `a(x)` then compilers interprete this as `a.apply(x)`. 
+
+Why not need in Array `new` keyword because Array class have companion-object that have `apply` method that do: `new Array[Int](3)` and place 1,2,3 in new array. And then we Array(1, 2, 3) in really means is `Array.apply(1, 2, 3)`.
+
+## Update-method
+When we write a(x) = y the compiller call `a.update(x, y)` method.
+THat we can implement mutable container objects.
+
+## implicit i
+i is powerfull tools for custimising existing libraries and creating high-level abstractions.
+
+implicit transforms are it that what compiler can insert for elimination any of errors. WHat compiler recive some error it try find some one impicits. If it found the implicit that it try it. 
+
+## implicit rules
+- marked rule: must stay `implicit` keyword.
+- scope rule: transform may stay in same scope AND it must be one-componented identify (not `someVariable.convert`)
+ex: in the code need single import keyword:
+`import Preamble._`  and after it can use some implicit translations.
+It is very important rule, because we controlled some transforms throw library scoping.
+- only one possibility in one moment: May be inserted only one implicit convertion. 
+
+## uses of impicit 
+Implicit can be used in 3 places:
+- transform to expected type
+- transform recipient of choice
+- implicit parametres
+
+### transform to expected type
+May be used for casting types:
+``` scala
+implicit def int2double(x: Int): Double = x.toDouble
+```
+
+### recepient transforms
+Uses for transform recepient of method - object.
+There are two use cases: more deep integrate new class into existing ierahy of types; for create DSL - domain specific languages - support in whole language some dsl.
+For examplesee: `Predef` ArrowAssoc`
+
+## implicit classes
+Often implicit case-classes uses for Rich-class-wrappers.
+IC must be with one parameter in constructor and unuse in case classes.
+
+## implicit parameters
+
